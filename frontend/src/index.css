@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html[lang="ar"] {
+  direction: rtl;
+  font-family: 'Cairo', 'Droid Arabic Kufi', sans-serif;
+}
+
+html[lang="en"] {
+  direction: ltr;
+  font-family: 'Inter', 'Poppins', 'SF Pro', sans-serif;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d4af37;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #e5c158;
+}
+
+* {
+  box-sizing: border-box;
+}
