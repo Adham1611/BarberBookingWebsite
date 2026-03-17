@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['customer', 'barber', 'admin'],
+      enum: ['customer', 'barber', 'owner', 'admin'],
       default: 'customer',
     },
     bio: String,
@@ -49,6 +49,26 @@ const userSchema = new mongoose.Schema(
     googleId: String,
     appleId: String,
     lastLogin: Date,
+    // Multi-tenant fields
+    shops: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Shop',
+      },
+    ],
+    primaryShop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Shop',
+    },
+    // For barber staff members
+    barberProfile: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Barber',
+    },
+    permissions: {
+      type: [String],
+      default: [],
+    },
   },
   {
     timestamps: true,

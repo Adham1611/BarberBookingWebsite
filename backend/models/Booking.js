@@ -2,10 +2,19 @@ import mongoose from 'mongoose';
 
 const bookingSchema = new mongoose.Schema(
   {
+    shop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Shop',
+      required: true,
+    },
     customer: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'User',
+      ref: 'Customer',
       required: true,
+    },
+    customerUser: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
     },
     barber: {
       type: mongoose.Schema.Types.ObjectId,
@@ -42,6 +51,7 @@ const bookingSchema = new mongoose.Schema(
       default: 'pending',
     },
     paymentMethod: String,
+    stripePaymentId: String,
     amount: Number,
     cancellationReason: String,
     cancelledBy: {
@@ -55,8 +65,8 @@ const bookingSchema = new mongoose.Schema(
   }
 );
 
-bookingSchema.index({ barber: 1, bookingDate: 1, startTime: 1, status: 1 });
-bookingSchema.index({ customer: 1, bookingDate: 1 });
-bookingSchema.index({ status: 1, bookingDate: 1 });
+bookingSchema.index({ shop: 1, barber: 1, bookingDate: 1, startTime: 1, status: 1 });
+bookingSchema.index({ shop: 1, customer: 1, bookingDate: 1 });
+bookingSchema.index({ shop: 1, status: 1, bookingDate: 1 });
 
 export default mongoose.model('Booking', bookingSchema);

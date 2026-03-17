@@ -41,7 +41,16 @@ export const createBarber = async (req, res, next) => {
 
 export const updateBarber = async (req, res, next) => {
   try {
-    const barber = await Barber.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const filter = { _id: req.params.id };
+    if (req.user.role !== 'admin') {
+      filter.user = req.user.id;
+    }
+
+    const barber = await Barber.findOneAndUpdate(filter, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
     if (!barber) return res.status(404).json({ message: 'Barber not found' });
     res.json({ message: 'Barber updated', barber });
     logger.info(`Barber updated: ${req.params.id}`);

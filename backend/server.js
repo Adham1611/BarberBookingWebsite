@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 import helmet from 'helmet';
 import mongoSanitize from 'express-mongo-sanitize';
 import rateLimit from 'express-rate-limit';
-import { connectDB } from './config/database.js';
+import { connectDB, isDbConnected } from './config/database.js';
 import { errorHandler, notFound } from './middleware/errorHandler.js';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
@@ -14,13 +14,14 @@ import bookingRoutes from './routes/bookings.js';
 import slotRoutes from './routes/slots.js';
 import reviewRoutes from './routes/reviews.js';
 import adminRoutes from './routes/admin.js';
+import shopRoutes from './routes/shops.js';
+import subscriptionRoutes from './routes/subscriptions.js';
+import customerRoutes from './routes/customers.js';
+import analyticsRoutes from './routes/analytics.js';
 
 dotenv.config();
 
 const app = express();
-
-// Connect Database
-connectDB();
 
 // Middleware
 app.use(helmet());
@@ -57,10 +58,18 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/slots', slotRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/shops', shopRoutes);
+app.use('/api/subscriptions', subscriptionRoutes);
+app.use('/api/customers', customerRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date() });
+  res.json({
+    status: isDbConnected ? 'OK' : 'DEGRADED',
+    dbConnected: isDbConnected,
+    timestamp: new Date(),
+  });
 });
 
 // Error handling
@@ -68,8 +77,14 @@ app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+
+const startServer = async () => {
+  await connectDB();
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+};
+
+startServer();
 
 export default app;

@@ -3,6 +3,10 @@ import User from '../models/User.js';
 
 export const authenticateToken = async (req, res, next) => {
   try {
+    if (!process.env.JWT_SECRET) {
+      return res.status(500).json({ message: 'Server auth configuration error' });
+    }
+
     const token = req.headers.authorization?.split(' ')[1];
 
     if (!token) {

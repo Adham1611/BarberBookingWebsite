@@ -2,10 +2,14 @@ import mongoose from 'mongoose';
 
 const serviceSchema = new mongoose.Schema(
   {
+    shop: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Shop',
+      required: true,
+    },
     name: {
       type: String,
       required: [true, 'Please provide service name'],
-      unique: true,
     },
     description: String,
     price: {
@@ -30,12 +34,19 @@ const serviceSchema = new mongoose.Schema(
       default: true,
     },
     displayOrder: Number,
+    barbers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Barber',
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-serviceSchema.index({ isActive: 1, displayOrder: 1 });
+serviceSchema.index({ shop: 1, isActive: 1, displayOrder: 1 });
+serviceSchema.index({ shop: 1, category: 1 });
 
 export default mongoose.model('Service', serviceSchema);

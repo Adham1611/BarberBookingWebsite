@@ -3,9 +3,10 @@ import logger from '../utils/logger.js';
 
 export const getAllServices = async (req, res, next) => {
   try {
-    const { isActive = true } = req.query;
+    const { isActive = 'true' } = req.query;
+    const parsedIsActive = isActive === 'true';
 
-    const services = await Service.find({ isActive })
+    const services = await Service.find({ isActive: parsedIsActive })
       .sort({ displayOrder: 1 })
       .lean();
 

@@ -41,6 +41,5 @@ const reviewSchema = new mongoose.Schema(
 );
 
 reviewSchema.index({ barber: 1, createdAt: -1 });
-reviewSchema.index({ booking: 1 });
 
 export default mongoose.model('Review', reviewSchema);
